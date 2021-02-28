@@ -1,5 +1,6 @@
 package io.rocketbase.lexoffice.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +16,11 @@ import java.util.Date;
 public class ShippingConditions {
 
     @JsonProperty("shippingDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date shippingDate;
 
     @JsonProperty("shippingEndDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date shippingEndDate;
 
     @JsonProperty("shippingType")

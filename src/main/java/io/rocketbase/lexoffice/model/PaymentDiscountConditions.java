@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,9 +15,9 @@ import lombok.NoArgsConstructor;
 public class PaymentDiscountConditions {
 
     @JsonProperty("discountPercentage")
-    private Long discountPercentage;
+    private BigDecimal discountPercentage;
 
     @JsonProperty("discountRange")
-    private Long discountRange;
+    private Integer discountRange;
 
 }

@@ -24,5 +24,5 @@ public class UnitPrice {
     private BigDecimal grossAmount;
 
     @JsonProperty("taxRatePercentage")
-    private Long taxRatePercentage;
+    private Integer taxRatePercentage;
 }

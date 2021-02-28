@@ -47,6 +47,10 @@ public class RequestContext {
     }
 
     public synchronized <E> E execute(RestUriBuilder uriBuilder, HttpMethod method, ParameterizedTypeReference<E> entityClass) {
+        return execute(uriBuilder, method, null, entityClass);
+    }
+
+    public synchronized <E> E execute(RestUriBuilder uriBuilder, HttpMethod method, E body, ParameterizedTypeReference<E> entityClass) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -54,7 +58,7 @@ public class RequestContext {
 
         checkThrottlePeriod();
 
-        HttpEntity<E> httpEntity = new HttpEntity<E>(headers);
+        HttpEntity<E> httpEntity = new HttpEntity<E>(body, headers);
         ResponseEntity<E> response = restTemplate.exchange(uriBuilder.build(), method, httpEntity, entityClass);
         lastCall = System.currentTimeMillis();
         if (apiBuilder.throttleProviderPresent()) {

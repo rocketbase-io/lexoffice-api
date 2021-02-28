@@ -27,7 +27,7 @@ public class LineItem {
     private String description;
 
     @JsonProperty("quantity")
-    private Long quantity;
+    private BigDecimal quantity;
 
     @JsonProperty("unitName")
     private String unitName;

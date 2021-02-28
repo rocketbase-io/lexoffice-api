@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Invoice {
+public class Quotation {
 
     @JsonProperty("id")
     private String id;
@@ -26,6 +26,10 @@ public class Invoice {
     @JsonProperty("updatedDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date updatedDate;
+
+    @JsonProperty("expirationDate")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    private Date expirationDate;
 
     @JsonProperty("version")
     private Long version;
@@ -65,9 +69,6 @@ public class Invoice {
 
     @JsonProperty("paymentConditions")
     private PaymentConditions paymentConditions;
-
-    @JsonProperty("shippingConditions")
-    private ShippingConditions shippingConditions;
 
     @JsonProperty("title")
     private String title;

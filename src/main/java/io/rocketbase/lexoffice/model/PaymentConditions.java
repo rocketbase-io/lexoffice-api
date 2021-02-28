@@ -16,7 +16,7 @@ public class PaymentConditions {
     private String paymentTermLabel;
 
     @JsonProperty("paymentTermDuration")
-    private Long paymentTermDuration;
+    private Integer paymentTermDuration;
 
     @JsonProperty("paymentDiscountConditions")
     private PaymentDiscountConditions paymentDiscountConditions;

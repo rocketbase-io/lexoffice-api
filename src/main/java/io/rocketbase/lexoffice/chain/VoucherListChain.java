@@ -1,5 +1,7 @@
 package io.rocketbase.lexoffice.chain;
 
+import com.google.common.base.Joiner;
+import io.rocketbase.lexoffice.LexofficeApi;
 import io.rocketbase.lexoffice.RequestContext;
 import io.rocketbase.lexoffice.model.Page;
 import io.rocketbase.lexoffice.model.Voucher;
@@ -8,6 +10,10 @@ import io.rocketbase.lexoffice.model.VoucherType;
 import lombok.SneakyThrows;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 public class VoucherListChain extends ExecutableRequestChain {
 
@@ -47,19 +53,82 @@ public class VoucherListChain extends ExecutableRequestChain {
         return this;
     }
 
+    public VoucherListChain sortByVoucherDate(boolean asc) {
+        super.getUriBuilder()
+                .addParameter("sort", String.format("voucherDate,%s", asc ? "ASC" : "DESC"));
+        return this;
+    }
+
+    public VoucherListChain sortByVoucherNumber(boolean asc) {
+        super.getUriBuilder()
+                .addParameter("sort", String.format("voucherNumber,%s", asc ? "ASC" : "DESC"));
+        return this;
+    }
+
+    public VoucherListChain sortByUpdatedDate(boolean asc) {
+        super.getUriBuilder()
+                .addParameter("sort", String.format("updatedDate,%s", asc ? "ASC" : "DESC"));
+        return this;
+    }
+
     public VoucherListChain archived(boolean archived) {
         super.getUriBuilder()
                 .addParameter("archived", String.valueOf(archived));
         return this;
     }
 
-    @SneakyThrows
-    public Page<Voucher> get(VoucherStatus voucherStatus, VoucherType voucherType) {
+    public VoucherListChain voucherType(VoucherType... voucherType) {
         super.getUriBuilder()
-                .addParameter("voucherStatus", voucherStatus.getValue());
-        super.getUriBuilder()
-                .addParameter("voucherType", voucherType.getValue());
+                .addParameter("voucherType", Joiner.on(",").join(Arrays.asList(voucherType).stream().map(VoucherType::getValue).collect(Collectors.toList())));
+        voucherTypeAdded = true;
+        return this;
+    }
 
+    public VoucherListChain voucherStatus(VoucherStatus... voucherStatus) {
+        super.getUriBuilder()
+                .addParameter("voucherStatus", Joiner.on(",").join(Arrays.asList(voucherStatus).stream().map(VoucherStatus::getValue).collect(Collectors.toList())));
+        voucherStatusAdded = true;
+        return this;
+    }
+
+    public VoucherListChain voucherNumber(String voucherNumber) {
+        super.getUriBuilder()
+                .addParameter("voucherNumber", voucherNumber);
+        return this;
+    }
+
+    public VoucherListChain voucherDate(Date voucherDate) {
+        super.getUriBuilder()
+                .addParameter("voucherDate", LexofficeApi.DATE_TIME_FORMAT.format(voucherDate));
+        return this;
+    }
+
+    public VoucherListChain updatedDate(Date updatedDate) {
+        super.getUriBuilder()
+                .addParameter("updatedDate", LexofficeApi.DATE_TIME_FORMAT.format(updatedDate));
+        return this;
+    }
+
+    public VoucherListChain dueDate(Date dueDate) {
+        super.getUriBuilder()
+                .addParameter("dueDate", LexofficeApi.DATE_TIME_FORMAT.format(dueDate));
+        return this;
+    }
+
+    public VoucherListChain contactName(String contactName) {
+        super.getUriBuilder()
+                .addParameter("contactName", contactName);
+        return this;
+    }
+
+    @SneakyThrows
+    public Page<Voucher> get() {
+        if (!voucherTypeAdded) {
+            voucherType(VoucherType.values());
+        }
+        if (!voucherStatusAdded) {
+            voucherStatus(VoucherStatus.valuesNonExclusive());
+        }
         return getContext().execute(getUriBuilder(), HttpMethod.GET, TYPE_REFERENCE);
     }
 

@@ -8,10 +8,31 @@ import lombok.SneakyThrows;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 public class ContactChain {
 
     private final RequestContext context;
+
+    public Contact get(String id) {
+        return new Get(context).get(id);
+    }
+
+    protected static class Get extends ExecutableRequestChain {
+        private static final ParameterizedTypeReference<Contact> TYPE_REFERENCE = new ParameterizedTypeReference<Contact>() {
+        };
+
+        public Get(RequestContext context) {
+            super(context, "/contacts");
+        }
+
+        @SneakyThrows
+        public Contact get(String id) {
+            getUriBuilder().appendPath("/" + id);
+            return getContext().execute(getUriBuilder(), HttpMethod.GET, TYPE_REFERENCE);
+        }
+    }
 
     public Fetch fetch() {
         return new Fetch(context);
@@ -91,6 +112,48 @@ public class ContactChain {
         @SneakyThrows
         public Page<Contact> get() {
             return getContext().execute(getUriBuilder(), HttpMethod.GET, TYPE_REFERENCE);
+        }
+    }
+
+    public Contact create(Contact contact) {
+        return new Create(context).submit(contact);
+    }
+
+    public static class Create extends ExecutableRequestChain {
+        private static final ParameterizedTypeReference<Contact> TYPE_REFERENCE = new ParameterizedTypeReference<Contact>() {
+        };
+
+        public Create(RequestContext context) {
+            super(context, "/contacts");
+        }
+
+        @SneakyThrows
+        public Contact submit(Contact contact) {
+            return getContext().execute(getUriBuilder(), HttpMethod.POST, contact, TYPE_REFERENCE);
+        }
+    }
+
+    /**
+     * if of contact needs to be not null
+     *
+     * @return updated entity
+     */
+    public Contact update(Contact contact) {
+        Objects.requireNonNull(contact.getId());
+        return new Create(context).submit(contact);
+    }
+
+    public static class Update extends ExecutableRequestChain {
+        private static final ParameterizedTypeReference<Contact> TYPE_REFERENCE = new ParameterizedTypeReference<Contact>() {
+        };
+
+        public Update(RequestContext context) {
+            super(context, "/contacts");
+        }
+
+        @SneakyThrows
+        public Contact update(Contact contact) {
+            return getContext().execute(getUriBuilder().appendPath(contact.getId()), HttpMethod.PUT, contact, TYPE_REFERENCE);
         }
     }
 

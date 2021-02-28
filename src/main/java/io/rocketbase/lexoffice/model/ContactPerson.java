@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ContactPerson {
 
     @JsonProperty("salutation")
-    private Salutation salutation;
+    private String salutation;
 
     @JsonProperty("firstName")
     private String firstName;

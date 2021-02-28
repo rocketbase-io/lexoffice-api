@@ -35,4 +35,8 @@ public class Address {
      */
     @JsonProperty("countryCode")
     private String countryCode;
+
+    public Address(String contactId) {
+        this.contactId = contactId;
+    }
 }

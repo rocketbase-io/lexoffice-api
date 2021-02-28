@@ -2,17 +2,18 @@ package io.rocketbase.lexoffice.chain;
 
 import io.rocketbase.lexoffice.RequestContext;
 import io.rocketbase.lexoffice.model.Invoice;
+import io.rocketbase.lexoffice.model.Quotation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 
 @RequiredArgsConstructor
-public class InvoiceChain {
+public class QuotationChain {
 
     private final RequestContext context;
 
-    public Invoice get(String id) {
+    public Quotation get(String id) {
         return new Get(context).get(id);
     }
 
@@ -21,26 +22,26 @@ public class InvoiceChain {
     }
 
     protected static class Get extends ExecutableRequestChain {
-        private static final ParameterizedTypeReference<Invoice> TYPE_REFERENCE = new ParameterizedTypeReference<Invoice>() {
+        private static final ParameterizedTypeReference<Quotation> TYPE_REFERENCE = new ParameterizedTypeReference<Quotation>() {
         };
 
         public Get(RequestContext context) {
-            super(context, "/invoices");
+            super(context, "/quotations");
         }
 
         @SneakyThrows
-        public Invoice get(String id) {
+        public Quotation get(String id) {
             getUriBuilder().appendPath("/" + id);
             return getContext().execute(getUriBuilder(), HttpMethod.GET, TYPE_REFERENCE);
         }
     }
 
     public static class Create extends ExecutableRequestChain {
-        private static final ParameterizedTypeReference<Invoice> TYPE_REFERENCE = new ParameterizedTypeReference<Invoice>() {
+        private static final ParameterizedTypeReference<Quotation> TYPE_REFERENCE = new ParameterizedTypeReference<Quotation>() {
         };
 
         public Create(RequestContext context) {
-            super(context, "/invoices");
+            super(context, "/quotations");
         }
 
         public Create finalize(Boolean finalize) {
@@ -50,8 +51,8 @@ public class InvoiceChain {
         }
 
         @SneakyThrows
-        public Invoice submit(Invoice invoice) {
-            return getContext().execute(getUriBuilder(), HttpMethod.POST, invoice, TYPE_REFERENCE);
+        public Quotation submit(Quotation quotation) {
+            return getContext().execute(getUriBuilder(), HttpMethod.POST, quotation, TYPE_REFERENCE);
         }
     }
 
