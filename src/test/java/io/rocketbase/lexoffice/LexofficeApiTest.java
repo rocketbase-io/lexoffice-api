@@ -40,19 +40,9 @@ public class LexofficeApiTest {
     public void fetchVoucherList() {
         LexofficeApi lexofficeApi = getLexofficeApi();
 
-        Page<Voucher> resultList = lexofficeApi.voucherList().get(VoucherStatus.OPEN, VoucherType.INVOICE);
+        Page<Voucher> resultList = lexofficeApi.voucherList().get();
 
         assertThat(resultList, notNullValue());
-    }
-
-    @SneakyThrows
-    @Test
-    public void getInvoice() {
-        LexofficeApi lexofficeApi = getLexofficeApi();
-
-        Invoice result = lexofficeApi.invoice().get("df22809b-1980-475d-be34-b420d62712b9");
-
-        assertThat(result, notNullValue());
     }
 
 }
